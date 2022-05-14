@@ -146,7 +146,6 @@ ADDRTYPE_MASK = 0xF
 
 def pack_addr(address):
     address_str = to_str(address)
-    address = to_bytes(address)
     for family in (socket.AF_INET, socket.AF_INET6):
         try:
             r = socket.inet_pton(family, address_str)
@@ -159,13 +158,6 @@ def pack_addr(address):
     if len(address) > 255:
         address = address[:255]  # TODO
     return b'\x03' + chr(len(address)) + address
-
-
-# add ss header
-def add_header(address, port, data=b''):
-    _data = b''
-    _data = pack_addr(address) + struct.pack('>H', port) + data
-    return _data
 
 
 def parse_header(data):
@@ -185,8 +177,8 @@ def parse_header(data):
             addrlen = ord(data[1])
             if len(data) >= 4 + addrlen:
                 dest_addr = data[2:2 + addrlen]
-                dest_port = struct.unpack('>H', data[2 + addrlen:4 +
-                                                     addrlen])[0]
+                dest_port = struct.unpack('>H', data[2 + addrlen:4
+                                          + addrlen])[0]
                 header_length = 4 + addrlen
             else:
                 logging.warn('header is too short')
@@ -218,7 +210,7 @@ class IPNetwork(object):
         list(map(self.add_network, addrs))
 
     def add_network(self, addr):
-        if addr is "":
+        if addr == "":
             return
         block = addr.split('/')
         addr_family = is_ip(block[0])
@@ -230,9 +222,9 @@ class IPNetwork(object):
             ip = (hi << 64) | lo
         else:
             raise Exception("Not a valid CIDR notation: %s" % addr)
-        if len(block) is 1:
+        if len(block) == 1:
             prefix_size = 0
-            while (ip & 1) == 0 and ip is not 0:
+            while (ip & 1) == 0 and ip != 0:
                 ip >>= 1
                 prefix_size += 1
             logging.warn("You did't specify CIDR routing prefix size for %s, "

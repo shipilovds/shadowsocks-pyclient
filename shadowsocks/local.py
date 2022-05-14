@@ -24,7 +24,7 @@ import logging
 import signal
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
-from shadowsocks import shell, daemon, eventloop, tcprelay, udprelay, asyncdns
+from shadowsocks import shell, daemon, eventloop, tcprelay, udprelay, asyncdns  # noqa:E402,E501
 
 
 @shell.exception_handle(self_=False, exit_code=1)
@@ -63,6 +63,7 @@ def main():
 
     daemon.set_user(config.get('user', None))
     loop.run()
+
 
 if __name__ == '__main__':
     main()

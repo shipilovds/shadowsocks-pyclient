@@ -1,97 +1,46 @@
-shadowsocks
-===========
-
-[![PyPI version]][PyPI]
-[![Build Status]][Travis CI]
+# shadowsocks client (written in python)
 
 A fast tunnel proxy that helps you bypass firewalls.
 
-Features:
-- TCP & UDP support
-- User management API
-- TCP Fast Open
-- Workers and graceful restart
-- Destination IP blacklist
+> This repo is just a copy of [original project repo](https://github.com/shadowsocks/shadowsocks).
 
-Server
-------
+I made some changes by myself, and thanks to author of [shadowsocks-py](https://pypi.org/project/shadowsocks-py/) (cannot find his repo) for fixes after the original code became deprecated.
 
-### Install
+Server part has been deleted. I don't need it on my client host. And I use official `shadowsocks-libev` as a server.
 
-Debian / Ubuntu:
+## Install
 
-    apt-get install python-pip
-    pip install git+https://github.com/shadowsocks/shadowsocks.git@master
+Install by PIP from git repo:
 
-CentOS:
+`sudo pip install git+https://github.com/shipilovds/shadowsocks-pyclient.git@main`
 
-    yum install python-setuptools && easy_install pip
-    pip install git+https://github.com/shadowsocks/shadowsocks.git@master
+Another way is to download repo and run 'make install'. But don't forget about [build requirements](requirements.txt)
 
-For CentOS 7, if you need AEAD ciphers, you need install libsodium
+## Manual Usage with Config File
+
+Create [configuration file](https://github.com/shadowsocks/shadowsocks/wiki/Configuration-via-Config-File) (`/etc/shadowsocks.json` for example)
+
+And run `/usr/local/bin/sslocal -c /etc/shadowsocks.json`
+
+## Usage with Systemd
+
+Create `/etc/systemd/system/shadowsocks.service` file. You can copy it [from here](shadowsocks.service).
+
+```shell
+# Reload systemd:
+sudo systemctl daemon-reload
+
+# Start service (don't forget about /etc/shadowsocks.json before it):
+sudo systemctl start shadowsocks
+
+# Enable service if you want him to start automatically:
+sudo systemctl enable shadowsocks
 ```
-dnf install libsodium python34-pip
-pip3 install  git+https://github.com/shadowsocks/shadowsocks.git@master
-```
-Linux distributions with [snap](http://snapcraft.io/):
 
-    snap install shadowsocks
-
-Windows:
-
-See [Install Shadowsocks Server on Windows](https://github.com/shadowsocks/shadowsocks/wiki/Install-Shadowsocks-Server-on-Windows).
-
-### Usage
-
-    ssserver -p 443 -k password -m aes-256-cfb
-
-To run in the background:
-
-    sudo ssserver -p 443 -k password -m aes-256-cfb --user nobody -d start
-
-To stop:
-
-    sudo ssserver -d stop
-
-To check the log:
-
-    sudo less /var/log/shadowsocks.log
-
-Check all the options via `-h`. You can also use a [Configuration] file
-instead.
-
-If you installed the [snap](http://snapcraft.io/) package, you have to prefix the commands with `shadowsocks.`,
-like this:
-
-    shadowsocks.ssserver -p 443 -k password -m aes-256-cfb
-    
-### Usage with Config File
-
-[Create configuration file and run](https://github.com/shadowsocks/shadowsocks/wiki/Configuration-via-Config-File)
-
-To start:
-
-    ssserver -c /etc/shadowsocks.json
-
-
-Documentation
--------------
+## Documentation
 
 You can find all the documentation in the [Wiki](https://github.com/shadowsocks/shadowsocks/wiki).
 
-License
--------
+## License
 
 Apache License
-
-
-
-
-
-
-
-[Build Status]:      https://img.shields.io/travis/shadowsocks/shadowsocks/master.svg?style=flat
-[PyPI]:              https://pypi.python.org/pypi/shadowsocks
-[PyPI version]:      https://img.shields.io/pypi/v/shadowsocks.svg?style=flat
-[Travis CI]:         https://travis-ci.org/shadowsocks/shadowsocks
-

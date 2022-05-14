@@ -21,7 +21,12 @@ from __future__ import absolute_import, division, print_function, \
 import collections
 import logging
 import time
+import sys
 
+if sys.version_info.major == 3 and sys.version_info.minor >= 10:
+    from collections.abc import MutableMapping
+else:
+    from collections import MutableMapping
 
 # this LRUCache is optimized for concurrency, not QPS
 # n: concurrency, keys stored in the cache
@@ -31,7 +36,7 @@ import time
 #       as sweep() causes long pause
 
 
-class LRUCache(collections.MutableMapping):
+class LRUCache(MutableMapping):
     """This class is not thread safe"""
 
     def __init__(self, timeout=60, close_callback=None, *args, **kwargs):
@@ -79,15 +84,18 @@ class LRUCache(collections.MutableMapping):
             least = self._last_visits[0]
             if now - least <= self.timeout:
                 break
-            self._last_visits.popleft()
-            for key in self._time_to_keys[least]:
-                if key in self._store:
-                    if now - self._keys_to_last_time[key] > self.timeout:
-                        if self.close_callback is not None:
+            if self.close_callback is not None:
+                for key in self._time_to_keys[least]:
+                    if key in self._store:
+                        if now - self._keys_to_last_time[key] > self.timeout:
                             value = self._store[key]
                             if value not in self._closed_values:
                                 self.close_callback(value)
                                 self._closed_values.add(value)
+            self._last_visits.popleft()
+            for key in self._time_to_keys[least]:
+                if key in self._store:
+                    if now - self._keys_to_last_time[key] > self.timeout:
                         del self._store[key]
                         del self._keys_to_last_time[key]
                         c += 1
@@ -137,12 +145,12 @@ def test():
 
     c = LRUCache(timeout=0.1, close_callback=close_cb)
     c['s'] = 1
-    c['t'] = 1
     c['s']
     time.sleep(0.1)
     c['s']
     time.sleep(0.3)
     c.sweep()
+
 
 if __name__ == '__main__':
     test()

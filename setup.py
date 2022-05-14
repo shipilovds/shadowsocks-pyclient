@@ -2,26 +2,27 @@ import codecs
 from setuptools import setup
 
 
-with codecs.open('README.rst', encoding='utf-8') as f:
+with codecs.open('README.md', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name="shadowsocks",
-    version="3.0.0",
+    name="shadowsocks-pyclient",
+    version="3.1.0",
     license='http://www.apache.org/licenses/LICENSE-2.0',
     description="A fast tunnel proxy that help you get through firewalls",
-    author='clowwindy',
-    author_email='clowwindy42@gmail.com',
-    url='https://github.com/shadowsocks/shadowsocks',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    author='Denis Shipilov @shipilovds',
+    author_email='shipilovds@gmail.com',
+    url='https://github.com/shipilovds/shadowsocks-pyclient',
     packages=['shadowsocks', 'shadowsocks.crypto'],
     package_data={
-        'shadowsocks': ['README.rst', 'LICENSE']
+        'shadowsocks': ['README.md', 'LICENSE']
     },
     install_requires=[],
     entry_points="""
     [console_scripts]
     sslocal = shadowsocks.local:main
-    ssserver = shadowsocks.server:main
     """,
     classifiers=[
         'License :: OSI Approved :: Apache Software License',
@@ -29,11 +30,13 @@ setup(
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Internet :: Proxy Servers',
     ],
-    long_description=long_description,
 )
